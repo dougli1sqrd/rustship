@@ -4,7 +4,9 @@ use grid::Grid;
 use grid::GridType;
 use grid::Inside;
 use pieces::Ship;
+use pieces::ShipType;
 use board::Coordinate;
+use board::Orientation;
 
 pub struct Board<'a> {
     pub grid: Grid<char>,
@@ -17,6 +19,17 @@ impl<'a> Board<'a> {
             grid: Grid::new(size, '.'),
             ships: Vec::new()
         }
+    }
+
+    pub fn place(& mut self, ship_type: ShipType, position: Coordinate, direction: Orientation) -> Result<(), Vec<Coordinate>> {
+        let mut ship = Ship::new(ship_type);
+        ship.change_pos(position);
+        if direction == Orientation::Vertical {
+            //rotate the ship object if we want vertical, since a new ship always starts Horizontal
+            ship.rotate();
+        }
+        return self.place_ship(ship);
+
     }
 
     pub fn place_ship(& mut self, ship: Ship<'a>) -> Result<(), Vec<Coordinate>> {

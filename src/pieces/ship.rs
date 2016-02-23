@@ -94,6 +94,15 @@ impl<'a> Ship<'a> {
         self.orientation = self.orientation.rotate();
         return self;
     }
+
+    pub fn change_pos(& mut self, position: Coordinate) -> & Ship {
+        self.position = position;
+        return self;
+    }
+
+    pub fn get_position(&self) -> Coordinate {
+        return self.position;
+    }
 }
 
 impl<'a> Inside<Ship<'a>> for Board<'a> {

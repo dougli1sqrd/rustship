@@ -80,3 +80,30 @@ fn test_place_ship_board_string() {
         . . .\n";
     assert_eq!(expected_board, b.to_string());
 }
+
+#[test]
+fn test_place_ship_fail_result_contents() {
+    let mut b = Board::new(3);
+    let s = Ship::new(ShipType::Battleship);
+    let error = match b.place_ship(s) {
+        Err(coordinates) => coordinates,
+        _ => Vec::new()
+    };
+    let error_coordinates = vec![Coordinate::new(3, 0)];
+    assert_eq!(error_coordinates, error);
+}
+
+#[test]
+fn test_board_place() {
+    let mut b = Board::new(5);
+    let result = b.place(ShipType::Destroyer, Coordinate::new(1, 1), Orientation::Vertical);
+    let expected_board =
+        ". . . . .\n\
+         . D . . .\n\
+         . D . . .\n\
+         . D . . .\n\
+         . . . . .\n";
+
+    assert_eq!(true, result.is_ok());
+    assert_eq!(expected_board, b.to_string());
+}

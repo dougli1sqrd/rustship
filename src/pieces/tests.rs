@@ -39,6 +39,13 @@ fn test_rotate_ship() {
 }
 
 #[test]
+fn test_ship_change_pos() {
+    let mut s = Ship::new(ShipType::Battleship);
+    s.change_pos(Coordinate::new(1, 0));
+    assert_eq!(Coordinate::new(1, 0), s.get_position());
+}
+
+#[test]
 fn test_ship_symbol() {
     let s = Ship::new(ShipType::Battleship);
     assert_eq!('B', s.symbol());
