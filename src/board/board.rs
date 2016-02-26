@@ -5,6 +5,7 @@ use grid::GridType;
 use grid::Inside;
 use pieces::Ship;
 use pieces::ShipType;
+use pieces::HitStatus;
 use board::Coordinate;
 use board::Orientation;
 
@@ -46,6 +47,16 @@ impl<'a> Board<'a> {
             }
         }
         return Err(outside);
+    }
+
+    pub fn receive_shot(&self, coordinate: Coordinate) -> HitStatus {
+        for ship in &self.ships {
+            let ship_spaces = ship.coordinates();
+            if ship_spaces.contains(&coordinate) {
+                return HitStatus::Hit;
+            }
+        }
+        return HitStatus::Miss;
     }
 
     fn update_grid(& mut self, coordinates: &[Coordinate], ship: Ship<'a>) {

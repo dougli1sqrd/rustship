@@ -5,8 +5,8 @@ use board::Orientation;
 use board::Board;
 use grid::Inside;
 
-#[derive(Copy, Clone)]
-enum HitStatus {
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub enum HitStatus {
     Hit,
     Miss
 }
@@ -125,5 +125,14 @@ impl<'a> fmt::Debug for Ship<'a> {
             coordinates_str.push_str(&c.to_string());
         }
         write!(f, "{}", coordinates_str)
+    }
+}
+
+impl fmt::Debug for HitStatus {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            &HitStatus::Hit => write!(f, "Hit"),
+            &HitStatus::Miss => write!(f, "Miss")
+        }
     }
 }
