@@ -49,10 +49,11 @@ impl<'a> Board<'a> {
         return Err(outside);
     }
 
-    pub fn receive_shot(&self, coordinate: Coordinate) -> HitStatus {
+    pub fn receive_shot(& mut self, coordinate: Coordinate) -> HitStatus {
         for ship in &self.ships {
             let ship_spaces = ship.coordinates();
             if ship_spaces.contains(&coordinate) {
+                self.grid.place(coordinate.col, coordinate.row, 'x');
                 return HitStatus::Hit;
             }
         }

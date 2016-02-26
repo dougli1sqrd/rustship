@@ -4,5 +4,6 @@ pub use self::board::Board;
 
 mod orientation;
 mod board;
+mod shot;
 #[cfg(test)]
 mod tests;
