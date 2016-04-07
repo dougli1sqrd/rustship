@@ -5,9 +5,10 @@ use grid::GridType;
 use grid::Inside;
 use pieces::Ship;
 use pieces::ShipType;
-use pieces::HitStatus;
+use board::HitStatus;
 use board::Coordinate;
 use board::Orientation;
+use board::Hit;
 
 pub struct Board<'a> {
     pub grid: Grid<char>,
@@ -30,7 +31,6 @@ impl<'a> Board<'a> {
             ship.rotate();
         }
         return self.place_ship(ship);
-
     }
 
     pub fn place_ship(& mut self, ship: Ship<'a>) -> Result<(), Vec<Coordinate>> {
@@ -64,6 +64,36 @@ impl<'a> Board<'a> {
         for c in coordinates {
             self.grid.place(c.col, c.row, ship.symbol());
         }
+    }
+}
+
+impl<'a> Inside<Ship<'a>> for Board<'a> {
+    fn inside(&self, ship: &Ship) -> bool {
+        let coordinates = ship.coordinates();
+        for c in coordinates {
+            if !self.grid.inside(&c) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+impl<'a> Hit for Board<'a> {
+    fn hits(&self, coordinate: Coordinate) -> HitStatus {
+        for ship in &self.ships {
+            match ship.hits(coordinate) {
+                HitStatus::Hit => {
+                    return HitStatus::Hit;
+                },
+                HitStatus::Miss => {}
+            };
+        }
+        return HitStatus::Miss;
+    }
+
+    fn resolve_hit(& mut self, coordinate: Coordinate) {
+
     }
 }
 

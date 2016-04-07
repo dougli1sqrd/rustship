@@ -1,35 +1,14 @@
 use super::Ship;
 use super::ShipType;
-use board::Board;
 use board::Coordinate;
 use board::Orientation;
-use grid::Inside;
+use board::Hit;
+use board::HitStatus;
 
 #[test]
 #[allow(unused_variables)]
 fn test_ship_new() {
     let s = Ship::new(ShipType::Battleship);
-}
-
-#[test]
-fn test_ship_inside_board() {
-    let s = Ship::new(ShipType::Battleship);
-    let b = Board::new(6);
-    assert_eq!(true, b.inside(&s));
-}
-
-#[test]
-fn test_ship_outside_board() {
-    let s = Ship::new(ShipType::Battleship);
-    let b = Board::new(2);
-    assert_eq!(false, b.inside(&s));
-}
-
-#[test]
-fn test_ship_vertical_inside() {
-    let mut s = Ship::new(ShipType::Battleship);
-    let b = Board::new(5);
-    assert_eq!(true, b.inside(&s.rotate()));
 }
 
 #[test]
@@ -68,4 +47,18 @@ fn test_ship_generates_coordinates() {
     let s = Ship::new(ShipType::Patrol);
     let coordinates = s.coordinates();
     assert_eq!(vec![Coordinate::new(0, 0), Coordinate::new(1, 0)], coordinates);
+}
+
+#[test]
+fn test_ship_hits_when_inside_coordinates() {
+    let s = Ship::new(ShipType::Destroyer);
+    let hit = s.hits(Coordinate::new(0, 0));
+    assert_eq!(HitStatus::Hit, hit);
+}
+
+#[test]
+fn test_ship_misses_when_outside_coordinates() {
+    let s = Ship::new(ShipType::Destroyer);
+    let hit = s.hits(Coordinate::new(1, 1));
+    assert_eq!(HitStatus::Miss, hit);
 }

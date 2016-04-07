@@ -2,14 +2,8 @@ use std::fmt;
 
 use board::Coordinate;
 use board::Orientation;
-use board::Board;
-use grid::Inside;
-
-#[derive(Copy, Clone, Eq, PartialEq)]
-pub enum HitStatus {
-    Hit,
-    Miss
-}
+use board::Hit;
+use board::HitStatus;
 
 pub enum ShipType {
     Battleship,
@@ -105,15 +99,17 @@ impl<'a> Ship<'a> {
     }
 }
 
-impl<'a> Inside<Ship<'a>> for Board<'a> {
-    fn inside(&self, ship: &Ship) -> bool {
-        let coordinates = ship.coordinates();
-        for c in coordinates {
-            if !self.grid.inside(&c) {
-                return false;
-            }
+impl<'a> Hit for Ship<'a> {
+    fn hits(&self, coordinate: Coordinate) -> HitStatus {
+        match self.coordinates().contains(&coordinate) {
+            true => HitStatus::Hit,
+            false => HitStatus::Miss
         }
-        return true;
+    }
+
+    #[allow(unused_variables)]
+    fn resolve_hit(& mut self, coordinate: Coordinate) {
+        self.hits += 1;
     }
 }
 
@@ -125,14 +121,5 @@ impl<'a> fmt::Debug for Ship<'a> {
             coordinates_str.push_str(&c.to_string());
         }
         write!(f, "{}", coordinates_str)
-    }
-}
-
-impl fmt::Debug for HitStatus {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            &HitStatus::Hit => write!(f, "Hit"),
-            &HitStatus::Miss => write!(f, "Miss")
-        }
     }
 }

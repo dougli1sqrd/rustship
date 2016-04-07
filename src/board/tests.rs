@@ -5,7 +5,7 @@ use ::grid::Grid;
 use ::grid::Inside;
 use pieces::Ship;
 use pieces::ShipType;
-use pieces::HitStatus;
+use board::HitStatus;
 
 #[test]
 #[allow(unused_variables)]
@@ -116,4 +116,25 @@ fn test_board_receive_shot_hit() {
     b.place(ShipType::Destroyer, Coordinate::new(1, 1), Orientation::Horizontal);
     let result = b.receive_shot(Coordinate::new(2, 1));
     assert_eq!(HitStatus::Hit, result);
+}
+
+#[test]
+fn test_ship_inside_board() {
+    let s = Ship::new(ShipType::Battleship);
+    let b = Board::new(6);
+    assert_eq!(true, b.inside(&s));
+}
+
+#[test]
+fn test_ship_outside_board() {
+    let s = Ship::new(ShipType::Battleship);
+    let b = Board::new(2);
+    assert_eq!(false, b.inside(&s));
+}
+
+#[test]
+fn test_ship_vertical_inside() {
+    let mut s = Ship::new(ShipType::Battleship);
+    let b = Board::new(5);
+    assert_eq!(true, b.inside(&s.rotate()));
 }
